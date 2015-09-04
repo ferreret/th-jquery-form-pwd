@@ -2,39 +2,43 @@
 // Solution: Hide and show them at appropiate time
 
 // Hide hints
-var $pass1 = $('#password');
-var $hint1 = $pass1.next();
-var $pass2 = $('#confirm_password');
-var $hint2 = $pass2.next();
+var $pass1  = $('#password');
+var $pass2  = $('#confirm_password');
+var $submit = $(':submit');
 
-function testHint1() {
+function testHint1 ( par ) {
 	console.log($pass1.val().length);
 	if ($pass1.val().length > 8) {
-		console.log('hiding');
-		console.log($hint1);
-		$hint1.hide();		
+		$(par).next().hide();
 	} else {
-		console.log('showing');
-		console.log($hint1);
-		$hint1.show();
+		$(par).next().show();
 	}
 }
 
-function testHint2() {
+function testHint2 ( par ) {
 	if ($pass1.val() === $pass2.val()) {
-		$hint2.hide();
+		$(par).next().hide();
 	} else {
-		$hint1.show();
+		$(par).next().show();
 	}
 }
 
-function testHints() {
-	console.log("text hints");
-	testHint1();
-	testHint2();
-}
+$pass1.on('keyup change', function () {
+	testHint1(this);
+	testHint2($pass2);
+});
 
-testHints();
+$pass2.on('keyup change', function () {
+	testHint1($pass1);
+	testHint2(this);
+});
 
-$pass1.on('change', testHints);
-$pass2.on('change', testHints);
+$submit.on('click', function ( e ) {
+	e.preventDefault();
+	console.log("Submit seleccionado");
+	testHint1($pass1);
+	testHint2($pass2);
+})
+
+testHint1($pass1);
+testHint2($pass2);
